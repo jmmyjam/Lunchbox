@@ -1,6 +1,7 @@
 package com.lunchbox.businesses;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,21 +10,30 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.EntityModel;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 
 @RestController
 public class BusinessController {
 
     private final BusinessRepository repository;
+    private final BusinessModelAssembler assembler;
 
-    BusinessController(BusinessRepository repository) {
+    BusinessController(BusinessRepository repository, BusinessModelAssembler assembler) {
         this.repository = repository;
+        this.assembler = assembler;
     }
 
     // aggregate root
     // tag::get-aggregate-root[]
     @GetMapping("/businesses")
-    List<Business> all() {
-        return repository.findAll();
+    CollectionModel<EntityModel<Business>> all() {
+        List<EntityModel<Business>> businesses = repository.findAll().stream()
+                .map(assembler::toModel)
+                .collect(Collectors.toList());
+
+        return CollectionModel.of(businesses, linkTo(methodOn(BusinessController.class).all()).withSelfRel());
     }
     // end::get-aggregate-root[]
 
@@ -33,8 +43,11 @@ public class BusinessController {
     }
 
     @GetMapping("/businesses/{id}")
-    Business one(@PathVariable Long id) {
-        return repository.findById(id).orElseThrow(() -> new BusinessNotFoundException(id));
+    EntityModel<Business> one(@PathVariable Long id) {
+        Business business = repository.findById(id)
+                .orElseThrow(() -> new BusinessNotFoundException(id));
+
+        return assembler.toModel(business);
     }
 
     @PutMapping("/businesses/{id}")
