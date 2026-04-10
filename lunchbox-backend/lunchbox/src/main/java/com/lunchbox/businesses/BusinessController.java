@@ -15,7 +15,7 @@ import org.springframework.hateoas.EntityModel;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 
 @RestController
-public class BusinessController {
+class BusinessController {
 
     private final BusinessRepository repository;
     private final BusinessModelAssembler assembler;

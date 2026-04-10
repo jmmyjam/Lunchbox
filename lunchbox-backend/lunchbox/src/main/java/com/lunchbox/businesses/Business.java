@@ -7,7 +7,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 
 @Entity
-class Business {
+public class Business {
 
     private @Id @GeneratedValue Long id;
     private String name;
@@ -19,10 +19,10 @@ class Business {
     private int priceRange;
     private boolean isActive;
 
-    Business() {
+    public Business() {
     }
 
-    Business(String name, String type, String address, String phoneNumber, String email, String description,
+    public Business(String name, String type, String address, String phoneNumber, String email, String description,
             int priceRange, boolean isActive) {
         this.name = name;
         this.type = type;

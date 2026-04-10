@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
-public class BusinessNotFoundAdvice {
+class BusinessNotFoundAdvice {
 
     @ExceptionHandler(BusinessNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
