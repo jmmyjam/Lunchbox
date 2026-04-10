@@ -124,8 +124,8 @@ class Business {
                 && Objects.equals(this.phoneNumber, business.phoneNumber)
                 && Objects.equals(this.email, business.email)
                 && Objects.equals(this.description, business.description)
-                && Objects.equals(this.priceRange, business.phoneNumber)
-                && Objects.equals(this.isActive, business.id);
+                && Objects.equals(this.priceRange, business.priceRange)
+                && Objects.equals(this.isActive, business.isActive);
     }
 
     @Override
