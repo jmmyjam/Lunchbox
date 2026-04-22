@@ -13,18 +13,24 @@ export default function Modal({ business, onClose, onSubmit }: ModalProps) {
   return (
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal" onClick={e => e.stopPropagation()}>
-        <h2>Order from {business.name}</h2>
-        <p className="modal-sub">What would you like to order?</p>
-        <textarea
-          value={desc}
-          onChange={e => setDesc(e.target.value)}
-          placeholder="e.g. 2x Burger Combo, 1x Large Fries..."
-          rows={4}
-        />
-        <div className="modal-actions">
-          <button className="cancel-btn" onClick={onClose}>Cancel</button>
+        <button className="modal-close" onClick={onClose}>✕</button>
+        <div className="modal-header">
+          <h2>{business.name}</h2>
+          <p className="modal-sub">{business.address}</p>
+        </div>
+        <div className="modal-body">
+          <label className="modal-label">What would you like to order?</label>
+          <textarea
+            value={desc}
+            onChange={e => setDesc(e.target.value)}
+            placeholder="e.g. 2x Burger Combo, 1x Large Fries..."
+            rows={4}
+            autoFocus
+          />
+        </div>
+        <div className="modal-footer">
           <button
-            className="order-btn"
+            className="place-order-btn"
             disabled={!desc.trim()}
             onClick={() => { onSubmit(desc); onClose() }}
           >
