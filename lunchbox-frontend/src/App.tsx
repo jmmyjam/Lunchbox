@@ -1,121 +1,94 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
 import './App.css'
+import type { View, Business } from './types'
+import { useBusinesses } from './hooks/useBusinesses'
+import { useOrders } from './hooks/useOrders'
+import Header from './components/Header'
+import BusinessCard from './components/BusinessCard'
+import OrderCard from './components/OrderCard'
+import Modal from './components/Modal'
 
-function App() {
-  const [count, setCount] = useState(0)
+export default function App() {
+  const [view, setView] = useState<View>('home')
+  const [search, setSearch] = useState('')
+  const [selectedBusiness, setSelectedBusiness] = useState<Business | null>(null)
+
+  const { businesses, loading, error: bizError, setError: setBizError } = useBusinesses()
+  const { orders, error: orderError, setError: setOrderError, placeOrder, cancelOrder, completeOrder } = useOrders(view)
+
+  const error = bizError || orderError
+  const clearError = () => { setBizError(''); setOrderError('') }
+
+  const filtered = businesses.filter(b =>
+    b.name.toLowerCase().includes(search.toLowerCase()) ||
+    b.type.toLowerCase().includes(search.toLowerCase())
+  )
+
+  function handleOrder(business: Business, desc: string) {
+    placeOrder(business, desc)
+    setView('orders')
+  }
 
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.tsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
+    <div className="app">
+      <Header view={view} orders={orders} onNavigate={setView} />
 
-      <div className="ticks"></div>
+      <main>
+        {error && (
+          <div className="error-banner">
+            {error} <button onClick={clearError}>✕</button>
+          </div>
+        )}
 
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
+        {view === 'home' && (
+          <>
+            <div className="hero-section">
+              <h1>Hungry? We've got you.</h1>
+              <p>Order from local restaurants and businesses near you.</p>
+              <input
+                className="search"
+                type="text"
+                placeholder="Search restaurants or cuisine..."
+                value={search}
+                onChange={e => setSearch(e.target.value)}
+              />
+            </div>
 
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
+            {loading && <div className="loading">Loading restaurants...</div>}
+
+            <div className="grid">
+              {filtered.map(b => (
+                <BusinessCard key={b.id} business={b} onOrder={setSelectedBusiness} />
+              ))}
+              {!loading && filtered.length === 0 && (
+                <p className="empty">No restaurants found.</p>
+              )}
+            </div>
+          </>
+        )}
+
+        {view === 'orders' && (
+          <>
+            <div className="page-header">
+              <h2>My Orders</h2>
+            </div>
+            <div className="orders-list">
+              {orders.length === 0 && <p className="empty">No orders yet. Go order something!</p>}
+              {orders.map(o => (
+                <OrderCard key={o.id} order={o} onCancel={cancelOrder} onComplete={completeOrder} />
+              ))}
+            </div>
+          </>
+        )}
+      </main>
+
+      {selectedBusiness && (
+        <Modal
+          business={selectedBusiness}
+          onClose={() => setSelectedBusiness(null)}
+          onSubmit={desc => handleOrder(selectedBusiness, desc)}
+        />
+      )}
+    </div>
   )
 }
-
-export default App
