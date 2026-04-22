@@ -18,12 +18,14 @@ public class Business {
     private String description;
     private int priceRange;
     private boolean isActive;
+    private double rating;
+    private int avgPrepTimeMinutes;
 
     public Business() {
     }
 
     public Business(String name, String type, String address, String phoneNumber, String email, String description,
-            int priceRange, boolean isActive) {
+            int priceRange, boolean isActive, double rating, int avgPrepTimeMinutes) {
         this.name = name;
         this.type = type;
         this.address = address;
@@ -32,6 +34,8 @@ public class Business {
         this.description = description;
         this.priceRange = priceRange;
         this.isActive = isActive;
+        this.rating = rating;
+        this.avgPrepTimeMinutes = avgPrepTimeMinutes;
     }
 
     /* GETTERS */
@@ -72,6 +76,14 @@ public class Business {
         return this.isActive;
     }
 
+    public double getRating() {
+        return this.rating;
+    }
+
+    public int getAvgPrepTimeMinutes() {
+        return this.avgPrepTimeMinutes;
+    }
+
     /* SETTERS */
 
     public void setId(Long id) {
@@ -110,6 +122,14 @@ public class Business {
         this.isActive = isActive;
     }
 
+    public void setRating(double rating) {
+        this.rating = rating;
+    }
+
+    public void setAvgPrepTimeMinutes(int avgPrepTimeMinutes) {
+        this.avgPrepTimeMinutes = avgPrepTimeMinutes;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o)
@@ -125,13 +145,15 @@ public class Business {
                 && Objects.equals(this.email, business.email)
                 && Objects.equals(this.description, business.description)
                 && Objects.equals(this.priceRange, business.priceRange)
-                && Objects.equals(this.isActive, business.isActive);
+                && Objects.equals(this.isActive, business.isActive)
+                && Double.compare(this.rating, business.rating) == 0
+                && this.avgPrepTimeMinutes == business.avgPrepTimeMinutes;
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(this.id, this.name, this.type, this.address, this.phoneNumber, this.email, this.description,
-                this.priceRange, this.isActive);
+                this.priceRange, this.isActive, this.rating, this.avgPrepTimeMinutes);
     }
 
     @Override
@@ -145,6 +167,8 @@ public class Business {
                 ", description='" + this.description + '\'' +
                 ", priceRange='" + this.priceRange + '\'' +
                 ", isActive='" + this.isActive + '\'' +
+                ", rating='" + this.rating + '\'' +
+                ", avgPrepTimeMinutes='" + this.avgPrepTimeMinutes + '\'' +
                 '}';
     }
 }

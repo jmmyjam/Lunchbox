@@ -8,6 +8,8 @@ export interface Business {
   description: string
   priceRange: number
   isActive: boolean
+  rating: number
+  avgPrepTimeMinutes: number
 }
 
 export interface Order {
