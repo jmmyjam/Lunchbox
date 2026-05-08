@@ -2,12 +2,15 @@ com/lunchbox/businesses/BusinessRepository.class
 com/lunchbox/businesses/BusinessNotFoundException.class
 com/lunchbox/businesses/BusinessNotFoundAdvice.class
 com/lunchbox/businesses/BusinessController.class
+com/lunchbox/menu/MenuItemController.class
 com/lunchbox/businesses/BusinessModelAssembler.class
 com/lunchbox/order/OrderModelAssembler.class
 com/lunchbox/WebConfig.class
+com/lunchbox/menu/MenuItemRepository.class
 com/lunchbox/order/OrderController.class
 com/lunchbox/BusinessApplication.class
 com/lunchbox/order/OrderRepository.class
+com/lunchbox/menu/MenuItem.class
 com/Main.class
 com/lunchbox/businesses/Business.class
 com/lunchbox/order/Status.class

@@ -34,7 +34,7 @@ function getEmoji(type: string) {
 
 interface BusinessCardProps {
   business: Business;
-  onOrder: (b: Business) => void;
+  onOrder: () => void;
 }
 
 export default function BusinessCard({ business, onOrder }: BusinessCardProps) {
@@ -44,7 +44,7 @@ export default function BusinessCard({ business, onOrder }: BusinessCardProps) {
   const rating = business.rating.toFixed(1);
 
   return (
-    <div className="card" onClick={() => onOrder(business)}>
+    <div className="card" onClick={onOrder}>
       <div
         className="card-image"
         style={{ background: `linear-gradient(135deg, ${bg}cc, ${bg}88)` }}

@@ -12,6 +12,15 @@ export interface Business {
   avgPrepTimeMinutes: number
 }
 
+export interface MenuItem {
+  id: number
+  businessId: number
+  name: string
+  description: string
+  price: number
+  category: string
+}
+
 export interface Order {
   id: number
   description: string
